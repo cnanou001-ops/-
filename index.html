@@ -22,7 +22,7 @@
 <div id="game-container">
     <h1>异界物理学家：真理的挑战</h1>
     <div class="stats">
-        <span>🧠 脑力: <span id="mp">100</span></span>
+        <span>🧠 脑力 (MP): <span id="mp">100</span></span>
         <span>🎒 装备: <span id="item">初始化...</span></span>
         <span>📍 进度: <span id="step">1</span>/10</span>
     </div>
@@ -38,83 +38,82 @@
         1: {
             getText: () => hasCleared ? "你带着【薄荷糖】再次醒来，艾琳的表情似乎轻松了一些。" : "你醒在异界，手中只有一本物理课本。艾琳正怀疑地看着你。",
             getChoices: () => [
-                { text: "【光学】利用封面反射阳光", next: 2, effect: { mp: -10 } },
-                { text: "【外交】递出薄荷糖", next: 2, effect: { mp: 20, item: "精灵的信赖" }, disabled: !hasCleared }
+                { text: "尝试与其沟通并展示课本图画", next: 2, effect: { mp: -5 } },
+                { text: "利用口袋里的薄荷糖建立初步信任", next: 2, effect: { mp: 15, item: "精灵的信赖" }, disabled: !hasCleared }
             ]
         },
         2: {
-            getText: () => "枯萎猎犬袭来！前方有巨石。",
+            getText: () => "枯萎猎犬袭来！艾琳准备射箭。你注意到上方斜坡悬挂着巨石。",
             getChoices: () => [
-                { text: "【力学】撬动巨石", next: 3, effect: { mp: -10 } },
-                { text: "【莽撞】试图空手搏斗", next: "fail_physics_1" }
+                { text: "寻找支点，利用长木撬动巨石", next: 3, effect: { mp: -5 } },
+                { text: "直接冲上前去吸引猎犬注意", next: "fail_physics_1" }
             ]
         },
         3: {
-            getText: () => "矿道机甲阻路，它的逻辑核心正在发热。",
+            getText: () => "进入矿道，守护机甲检测到入侵。它发出机械噪音，等待逻辑输入。",
             getChoices: () => [
-                { text: "【逻辑】悖论打击", next: 4, effect: { mp: -15 } },
-                { text: "【强拆】暴力破拆（脑力消耗极大）", next: 4, effect: { mp: -50 } }
+                { text: "输入一段逻辑悖论代码尝试干扰其阵列", next: 4, effect: { mp: -10 } },
+                { text: "尝试通过金属导线造成供电单元短路", next: 4, effect: { mp: -10, item: "磁铁矿" } }
             ]
         },
         4: {
-            getText: () => "巴林的熔炉压力爆表！你需要立刻计算安全阈值。",
+            getText: () => "巴林带你来到工坊。熔炉由于以太压力过高正在剧烈震动！",
             getChoices: () => [
-                { text: "【热力学】冷凝减压", next: 5, effect: { item: "蒸汽外骨骼", mp: -10 } },
-                { text: "【错误操作】强行关闭阀门导致爆炸", next: "fail_physics_2" }
+                { text: "设计一个冷凝分离室以平衡循环（获得外骨骼）", next: 5, effect: { item: "蒸汽外骨骼", mp: 10 } }, // 修正：正确操作小幅回复MP
+                { text: "手动旋紧保险阀门以阻止压力外泄", next: "fail_physics_2" }
             ]
         },
         5: {
-            getText: () => "面对飞行恶魔，巴林给了你炸弹。",
+            getText: () => "恶魔在空中俯冲。巴林分给你简易爆炸物。你需要决定投掷时机。",
             getChoices: () => [
-                { text: "【重力】抛物线精准投掷", next: 6, effect: { mp: -10 } },
-                { text: "【盲目投掷】被恶魔反弹炸药", next: "fail_physics_3" }
+                { text: "依据抛物线原理在恶魔爬升点预判投掷", next: 6, effect: { mp: -5 } },
+                { text: "直接瞄准恶魔头部进行高速直投", next: "fail_physics_3" }
             ]
         },
         6: {
-            getText: () => "剧毒护城河拦路。",
+            getText: () => "毒河湍急。根据流体力学，中心流速最快。",
             getChoices: () => [
-                { text: "【流体力学】制造喷气船", next: 7, effect: { mp: -15 } },
-                { text: "【鲁莽】直接泅渡", next: "fail_physics_4" }
+                { text: "制作带有锥形整流罩的简易喷气小船", next: 7, effect: { mp: -5 } },
+                { text: "依靠体力和艾琳的协助强行游过去", next: "fail_physics_4" }
             ]
         },
         7: {
-            getText: () => "力场囚笼关着长老。",
+            getText: () => "长老被困在禁魔力场中。力场表面有规律的电流脉动。",
             getChoices: () => [
-                { text: "【电磁学】法拉第笼", next: 8, effect: { mp: -15 } },
-                { text: "【蛮力】用手拉扯电磁栅栏", next: "fail_physics_5" }
+                { text: "使用金属框架构建法拉第笼进行静电屏蔽", next: 8, effect: { mp: -10 } },
+                { text: "利用极端温差导致材料疲劳从而物理爆破", next: 8, effect: { mp: -10 } }
             ]
         },
         8: {
-            getText: () => "莫德雷释放绝对零度！",
+            getText: () => "莫德雷释放寒冰。温度急剧下降，分子动能几乎归零。",
             getChoices: () => [
-                { text: "【摩擦生热】快速运动（需外骨骼）", next: 9, effect: { mp: -10 }, disabled: state.item !== "蒸汽外骨骼" },
-                { text: "【以火攻冰】普通的火把（瞬间熄灭）", next: "fail_physics_6" }
+                { text: "启动外骨骼过载模式利用机械摩擦供热", next: 9, effect: { mp: -10 }, disabled: state.item !== "蒸汽外骨骼" },
+                { text: "点燃周围所有可燃物试图维持环境温度", next: "fail_physics_6" }
             ]
         },
         9: {
-            getText: () => "放大器共振中，频率即将达到临界点。",
+            getText: () => "放大器共振中。你需要寻找干涉点。",
             getChoices: () => [
-                { text: "【共振】相位对冲震碎它", next: 10, effect: { mp: -15 } },
-                { text: "【节奏错误】引发更大规模的爆炸", next: "fail_physics_7" }
+                { text: "发射反向相位波束制造相消干涉", next: 10, effect: { mp: -10 } },
+                { text: "通过提升魔法输出尝试直接震碎放大器", next: "fail_physics_7" }
             ]
         },
         10: {
-            getText: () => "莫德雷最后的一击。你要开启核聚变吗？",
+            getText: () => "莫德雷降临。空间开始崩塌。你准备如何回应这最终的挑战？",
             getChoices: () => [
-                { text: "【经典力学】最后的铁拳", next: "end_hero" },
-                { text: "【质能方程】真理觉醒（回归结局）", next: "end_god" }
+                { text: "运用动量守恒，在外骨骼加持下正面一击", next: "end_hero" },
+                { text: "以物质为引释放微型核聚变（回归结局）", next: "end_god" }
             ]
         },
-        // 失败结局集锦
-        "fail_physics_1": { getText: () => "❌ <span class='fail-text'>【失败：生物直觉缺失】</span>你试图用肉身对抗死灵生物。你醒在现代医院，医生说你因压力过大在物理课上晕倒了。你没有获得任何奖励。", choices: [{ text: "重头再来", next: "restart_no_reward" }] },
-        "fail_physics_2": { getText: () => "❌ <span class='fail-text'>【失败：压力爆炸】</span>由于你没考虑波义耳定律，熔炉炸了。你回到了地球，正在补考热力学。", choices: [{ text: "重头再来", next: "restart_no_reward" }] },
-        "fail_physics_3": { getText: () => "❌ <span class='fail-text'>【失败：轨迹误差】</span>炸弹没击中恶魔反而炸塌了悬崖。你醒来时发现自己正趴在物理试卷上。", choices: [{ text: "重头再来", next: "restart_no_reward" }] },
-        "fail_physics_4": { getText: () => "❌ <span class='fail-text'>【失败：生化渗透】</span>毒水瞬间麻痹了你。你回到了现实世界，正在查阅化学元素周期表。", choices: [{ text: "重头再来", next: "restart_no_reward" }] },
-        "fail_physics_5": { getText: () => "❌ <span class='fail-text'>【失败：触电事故】</span>你被高压电烧焦了。你回到地球，由于触电恐惧症，你再也不敢修插座了。", choices: [{ text: "重头再来", next: "restart_no_reward" }] },
-        "fail_physics_6": { getText: () => "❌ <span class='fail-text'>【失败：失温】</span>热量流失太快。你醒来时正抱着暖气片，以为自己还在异界。", choices: [{ text: "重头再来", next: "restart_no_reward" }] },
-        "fail_physics_7": { getText: () => "❌ <span class='fail-text'>【失败：频率失控】</span>由于相位计算错误，你把自己震飞了。你回到了现实中的考场。", choices: [{ text: "重头再来", next: "restart_no_reward" }] },
-        "end_hero": { getText: () => "🛡️【结局：钢铁贤者】你击败了莫德雷！你留在了异界。虽然没带回薄荷糖，但你是这里的英雄。", choices: [{ text: "重玩", next: "restart_no_reward" }] },
-        "end_god": { getText: () => "🌌【结局：物理真神】你改写了宇宙。你醒在课桌前，口袋里多了【薄荷糖】！", choices: [{ text: "开启二周目", next: "restart_with_reward" }] }
+        // 结局处理
+        "fail_physics_1": { getText: () => "❌ 【失败】你被猎犬扑倒。现代世界的你在生物课上被老师叫醒了。", choices: [{ text: "重回地球 (重新开始)", next: "restart_no_reward" }] },
+        "fail_physics_2": { getText: () => "❌ 【失败】容器因内压瞬间超过极限而爆裂。你回到了现实世界，正在重修热力学。", choices: [{ text: "重回地球 (重新开始)", next: "restart_no_reward" }] },
+        "fail_physics_3": { getText: () => "❌ 【失败】重力导致炸弹在恶魔下方落空。你醒在写满抛物线公式的草稿纸上。", choices: [{ text: "重回地球 (重新开始)", next: "restart_no_reward" }] },
+        "fail_physics_4": { getText: () => "❌ 【失败】由于忽略了流体阻力，你被激流卷走。你回到了现实，发现自己正在游泳池边。", choices: [{ text: "重回地球 (重新开始)", next: "restart_no_reward" }] },
+        "fail_physics_6": { getText: () => "❌ 【失败】由于热传导率太低，火焰无法对抗魔法寒冷。你醒在现实中的冬日早晨。", choices: [{ text: "重回地球 (重新开始)", next: "restart_no_reward" }] },
+        "fail_physics_7": { getText: () => "❌ 【失败】盲目的能量输出引发了共振失控，整片区域坍塌了。你醒在地震演习中。", choices: [{ text: "重回地球 (重新开始)", next: "restart_no_reward" }] },
+        "end_hero": { getText: () => "🛡️【结局：钢铁贤者】你击败了莫德雷并留在了异界。虽然没能带着薄荷糖回归，但你是这里的英雄。", choices: [{ text: "再次开始冒险", next: "restart_no_reward" }] },
+        "end_god": { getText: () => "🌌【结局：物理真神】你改写了法则。你醒在课桌前，口袋里多了【薄荷糖】！", choices: [{ text: "开启真理二周目", next: "restart_with_reward" }] }
     };
 
     function updateStats() {
@@ -135,9 +134,9 @@
         btnEl.innerHTML = '';
 
         if (state.mp <= 0) {
-            textEl.innerHTML = "❌ <span class='fail-text'>【失败：脑力耗尽】</span>你的大脑因超负荷计算而宕机。你回到了地球，正在复读。";
+            textEl.innerHTML = "❌ <span class='fail-text'>【失败】脑力枯竭。</span>你在复杂的计算中陷入沉睡。";
             const btn = document.createElement('button');
-            btn.innerText = "重新开始";
+            btn.innerText = "重回地球 (重新开始)";
             btn.onclick = () => location.reload();
             btnEl.appendChild(btn);
             return;
