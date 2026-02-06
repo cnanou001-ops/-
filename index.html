@@ -44,7 +44,8 @@
 </div>
 
 <script>
-    let hasCleared = localStorage.getItem('gameCleared') === 'true';
+    // 修正核心逻辑：严格检查localStorage状态
+    let hasCleared = (localStorage.getItem('gameCleared') === 'true');
     let state = { 
         mp: 100, 
         inventory: hasCleared ? ["物理课本", "薄荷糖"] : ["物理课本"], 
@@ -95,21 +96,21 @@
             getText: () => "矮人巴林惊叹于你精巧的技艺与知识，答应帮助你们。但前提是需要你帮他解决即将爆炸的的熔炉问题。", 
             getChoices: () => [
                 { text: "设计冷凝分离室", next: 5, effect: { item: "蒸汽外骨骼", mp: 10 } }, 
-                { text: "利用高压电流瞬间汽化熔炉内的多余以太", next: 5, effect: { mp: -30 } } // 支线：强行过关但扣MP多
+                { text: "利用高压电流瞬间汽化熔炉内的多余以太", next: 5, effect: { mp: -30 } }
             ] 
         },
         5: { 
-            getText: () => "莫德雷终于发现了异界勇者的降临。他派出所报丧鸟前来袭击。矮人巴林愿意为你们提供炸药。", 
+            getText: () => "莫德雷终于发现了异界勇者的降临。他派出报丧鸟前来袭击。矮人巴林愿意为你们提供炸药。", 
             getChoices: () => [
                 { text: "花费一点时间计算抛物线预判投掷", next: 6, effect: { mp: -5 } }, 
-                { text: "利用爆炸产生的冲击波，将碎石震向敌阵", next: 6, effect: { mp: -25 } } // 支线：暴力过关
+                { text: "利用爆炸产生的冲击波，将碎石震向敌阵", next: 6, effect: { mp: -25 } }
             ] 
         },
         6: { 
             getText: () => "击败报丧鸟后，你们向莫德雷的城堡出发。途中被莫德雷设置的魔法阵困住。", 
             getChoices: () => [
                 { text: "试图制作一枚指南针【需要磁铁矿】", next: 10, effect: { mp: -15 }, disabled: !state.inventory.includes("磁铁矿") }, 
-                { text: "利用太阳高度角判断方向并强行突破", next: 10, effect: { mp: -40 } } // 支线
+                { text: "利用太阳高度角判断方向并强行突破", next: 10, effect: { mp: -40 } }
             ] 
         },
         7: { getText: () => "【剧情分支】艾琳意外地喜欢这种刺激。她精神大振，直接就要带着你前往莫德雷的城堡突袭。", getChoices: () => [{ text: "继续前进", next: 10 }] },
@@ -144,7 +145,6 @@
         14: {
             getText: () => {
                 let base = "莫德雷倒下了。空间正在坍塌。\n";
-                // 结局打败方式描述分支
                 if (state.inventory.includes("蒸汽外骨骼")) {
                     base += "依靠着蒸汽外骨骼提供的最后动力，你挥出了一记超越音速的重拳，将莫德雷彻底击碎。";
                 } else if (state.romanceLevel > 0) {
@@ -166,10 +166,10 @@
             getText: () => "白光吞噬了一切，你感觉自己在时空中漂浮...",
             getChoices: () => [{ text: "迎接最终命运", next: state.romanceLevel > 0 ? "end_romance" : "end_normal" }]
         },
-        "end_stay": { getText: () => "【结局1：异界英雄】你选择了留下。由于未开启真理回归，你没有获得薄荷糖。你成为了传说，但无法开启下一次轮回。", choices: [{ text: "结束旅程", next: "restart_total" }] },
-        "end_normal": { getText: () => "【结局2：真理觉醒】你回到了课桌前，口袋里多了【薄荷糖】。你可以开启二周目迎接更深的羁绊。", choices: [{ text: "开启二周目", next: "restart_with_candy" }] },
-        "end_romance": { getText: () => "【结局3：真理与羁绊】你在艾琳的泪水中回归。旅程结束了，你已不再需要薄荷糖。时空之门缓缓关闭。", choices: [{ text: "彻底终结旅程", next: "restart_total" }] },
-        "fail": { getText: () => "你冒险的尝试失败了。你失去意识。你感到一阵剧痛，原来是同桌把你掐醒，物理老师正在叫你起来回答问题。", quiz: true }
+        "end_stay": { getText: () => "【结局1：异界英雄】你选择了留下。你为这个世界带来了物理的力量。成为了新的传说。", choices: [{ text: "结束旅程", next: "restart_total" }] },
+        "end_normal": { getText: () => "【结局2：真理觉醒】你发现自己只是在物理课上做了一个梦。同样打瞌睡的同桌拆开了一包薄荷糖，并给力你一颗。冰凉刺激的味道让你回忆起和艾琳冒险时的种种经历。你发现自己无法放下艾琳。你决定重新回到埃索伦大陆，寻找艾琳。", choices: [{ text: "开启二周目", next: "restart_with_candy" }] },
+        "end_romance": { getText: () => "【结局3：真理与羁绊】第二次来到这个世界的你破坏了时空法则。你能感受到这个世界正在排斥你，你的意识渐渐模糊，艾琳在你身边徒劳地哭泣。你再次睁开眼，发现自己仍然在教室里，这次你的同桌已经彻底趴在桌上呼呼大睡，没有人给你薄荷糖。", choices: [{ text: "彻底终结旅程", next: "restart_total" }] },
+        "fail": { getText: () => "你冒险的举动失败了。你失去意识。你感到一阵剧透，原来是同桌把你掐醒，物理老师正点名叫你回答问题。", quiz: true }
     };
 
     function showItemModal(itemName) {
@@ -194,7 +194,7 @@
             btn.innerText = `${String.fromCharCode(65 + i)}. ${opt}`;
             btn.onclick = () => {
                 if (i === q.correct) {
-                    alert("回答正确！获得薄荷糖，开启二周目。");
+                    alert("回答正确！你掌握了真理，获得了薄荷糖奖励。");
                     localStorage.setItem('gameCleared', 'true');
                     location.reload();
                 } else {
