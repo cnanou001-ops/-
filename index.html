@@ -3,114 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>异界物理学家：埃索伦的觉醒</title>
+    <title>异界物理学家：十道真理之门</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #e2e2e2; display: flex; justify-content: center; padding: 20px; }
-        #game-container { max-width: 800px; background: #16213e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 { color: #4ecca3; text-align: center; }
-        .stats { display: flex; justify-content: space-around; background: #0f3460; padding: 10px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; }
-        .content { line-height: 1.6; font-size: 1.1em; margin-bottom: 25px; }
-        .choices { display: flex; flex-direction: column; gap: 10px; }
-        button { background: #4ecca3; color: #1a1a2e; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-size: 1em; font-weight: bold; transition: 0.3s; }
-        button:hover { background: #45b293; transform: scale(1.02); }
-        .hidden { display: none; }
-        .ending { color: #f05454; font-weight: bold; text-align: center; font-size: 1.2em; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #0d1117; color: #c9d1d9; display: flex; justify-content: center; padding: 20px; line-height: 1.6; }
+        #game-container { max-width: 700px; background: #161b22; padding: 30px; border-radius: 12px; border: 1px solid #30363d; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        h1 { color: #58a6ff; text-align: center; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
+        .stats { display: flex; justify-content: space-between; background: #21262d; padding: 12px; border-radius: 6px; margin-bottom: 20px; color: #8b949e; font-size: 0.9em; }
+        .content { font-size: 1.1em; margin-bottom: 25px; min-height: 150px; }
+        .choices { display: flex; flex-direction: column; gap: 12px; }
+        button { background: #238636; color: white; border: 1px solid rgba(240,246,252,0.1); padding: 14px; border-radius: 6px; cursor: pointer; font-size: 1em; text-align: left; transition: 0.2s; }
+        button:hover { background: #2ea043; transform: translateX(5px); }
+        button:disabled { background: #30363d; color: #8b949e; cursor: not-allowed; }
+        .highlight { color: #ffa657; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="game-container">
-    <h1>异界物理学家：埃索伦的觉醒</h1>
+    <h1>异界物理学家：十道真理之门</h1>
     <div class="stats">
-        <span>🧠 精神力: <span id="mp">100</span></span>
-        <span>💪 体力: <span id="hp">100</span></span>
-        <span>🎒 核心道具: <span id="item">《高中物理》</span></span>
+        <span>🧠 脑力: <span id="mp">100</span></span>
+        <span>🛡️ 装备: <span id="item">课本</span></span>
+        <span>📍 进度: <span id="step">1</span>/10</span>
     </div>
-    <div id="scene-text" class="content">
-        </div>
-    <div id="choice-buttons" class="choices">
-        </div>
+    <div id="scene-text" class="content"></div>
+    <div id="choice-buttons" class="choices"></div>
 </div>
 
 <script>
+    let state = { mp: 100, item: "物理课本", step: 1 };
+
     const story = {
-        start: {
-            text: "你醒来在异世界的森林，精灵少女艾琳正用箭指着你，怀疑你是邪恶巫师莫德雷的探子。你低头看到了怀里的《高中物理》课本。",
+        1: {
+            text: "你醒在魔法森林。精灵艾琳认为你是间谍。你手里只有一本《高中物理》。",
             choices: [
-                { text: "【外交】展示物理课本，用反射光证明清白", next: "forest_peace" },
-                { text: "【魔法】尝试用科学逻辑强行聚拢以太", next: "forest_magic" }
+                { text: "【光学】利用封面反射阳光制造'神迹'", next: 2, effect: { mp: -5 } },
+                { text: "【外交】用薄荷糖贿赂她（需要你有糖，但现在只有书）", next: 2, disabled: true }
             ]
         },
-        forest_peace: {
-            text: "你利用封面反射阳光激活了植物。艾琳感到惊讶并带你去见矮人工匠巴林。途中遭遇枯萎猎犬！",
+        2: {
+            text: "艾琳带你出森林，被枯萎猎犬包围。前方有一块不稳的巨石。",
             choices: [
-                { text: "【力学】撬动巨石，势能打击", next: "dwarf_workshop" },
-                { text: "【躲避】吃下掩盖气息的浆果潜行", next: "dwarf_workshop" }
+                { text: "【力学】利用杠杆原理撬动巨石压死猎犬", next: 3, effect: { item: "杠杆经验" } },
+                { text: "【逃跑】消耗脑力全速奔跑", next: 3, effect: { mp: -20 } }
             ]
         },
-        forest_magic: {
-            text: "你强行转化能量，虽然吓跑了精灵，但身体过载。你昏倒在矮人矿道口，被巴林救起。",
-            next: "dwarf_workshop"
-        },
-        dwarf_workshop: {
-            text: "巴林的熔炉压力不稳。你利用冷凝器原理帮他改进了动力系统，获得了蒸汽外骨骼！此时莫德雷正试图献祭精灵。",
+        3: {
+            text: "你们进入矮人废墟，遇到一台生锈的扫射机甲。",
             choices: [
-                { text: "【潜入】利用全反射原理制造光学迷彩", next: "final_battle_stealth" },
-                { text: "【强攻】制造电磁轨道炮轰击堡垒", next: "final_battle_power" }
+                { text: "【逻辑】大喊'说谎者悖论'让它逻辑死锁", next: 4, effect: { mp: -10 } },
+                { text: "【电路】用回形针让机甲电池短路", next: 4, effect: { item: "导线" } }
             ]
         },
-        final_battle_stealth: {
-            text: "你潜入祭坛，发现莫德雷正站在生命之树下。你需要立刻破坏四个熵增放大器！",
+        4: {
+            text: "矮人工匠巴林出现了！他的熔炉快炸了。",
             choices: [
-                { text: "【共振】计算固有频率，让放大器自毁", next: "end_hero" },
-                { text: "【过载】引入混乱逻辑，烧毁魔法阵", next: "end_mystery" }
+                { text: "【热力学】建立冷凝室，发明蒸汽机", next: 5, effect: { item: "蒸汽外骨骼" } },
+                { text: "【声学】调整管道长度产生驻波降压", next: 5, effect: { item: "声波筒" } }
             ]
         },
-        final_battle_power: {
-            text: "轨道炮威力巨大，但引来了莫德雷的死灵龙。你必须做出最后的决断！",
+        5: {
+            text: "莫德雷派来飞行恶魔追杀你们。你在高处。",
             choices: [
-                { text: "【极限打击】用书页做超导体，释放全力", next: "end_sacrifice" },
-                { text: "【逻辑干扰】大喊悖论，试图让死灵龙死机", next: "end_hero" }
+                { text: "【重力】计算抛物线，投掷巴林的炸弹", next: 6 },
+                { text: "【空气动力学】利用外骨骼滑翔逃生", next: 6 }
             ]
         },
-        end_hero: {
-            text: "🎉【结局：异界大贤者】你成功摧毁了阴谋，世界进入了理学魔法时代。你成了埃索伦大陆最著名的教授，每天忙着给巨龙讲牛顿三定律。",
-            choices: [{ text: "重新开始", next: "start" }]
+        6: {
+            text: "到达黑石堡垒护城河，河水有剧毒且湍急。",
+            choices: [
+                { text: "【流体力学】利用伯努利原理制造喷气船", next: 7 },
+                { text: "【电解】用强电流将水分解（需要发电机）", next: 7, disabled: true }
+            ]
         },
-        end_sacrifice: {
-            text: "🕯️【结局：壮烈牺牲】你击败了莫德雷，但身体无法承受这种高能输出。你化作了漫天星光，你的物理书成为了这个世界的创世圣经。",
-            choices: [{ text: "重新开始", next: "start" }]
+        7: {
+            text: "潜入堡垒，遇到禁魔力场笼子关着长老。",
+            choices: [
+                { text: "【电磁学】制作法拉第笼屏蔽电磁攻击", next: 8 },
+                { text: "【热胀冷缩】用冰火两重天震碎锁芯", next: 8 }
+            ]
         },
-        end_mystery: {
-            text: "🌌【结局：回归之路】魔法阵的崩溃撕裂了时空，你被吸回了地球。你醒来在物理课上，老师正问你什么叫'功'。你看着手中的笔，指尖闪过一丝微光。",
-            choices: [{ text: "重新开始", next: "start" }]
-        }
+        8: {
+            text: "莫德雷发现你们了！他释放了绝对零度咒语。",
+            choices: [
+                { text: "【能量守恒】通过剧烈摩擦外骨骼产热", next: 9 },
+                { text: "【物态变化】利用升华吸热反制", next: 9 }
+            ]
+        },
+        9: {
+            text: "最终仪式台！四个熵增放大器正在运行。",
+            choices: [
+                { text: "【共振】寻找放大器的固有频率震碎它", next: 10 },
+                { text: "【光学】利用透镜汇聚圣光直接气化", next: 10 }
+            ]
+        },
+        10: {
+            text: "莫德雷绝望地冲向你。这是最后的一击！",
+            choices: [
+                { text: "【质能方程】烧毁课本释放微型核聚变", next: "end_god" },
+                { text: "【经典力学】用外骨骼全力一拳", next: "end_hero" }
+            ]
+        },
+        "end_god": { text: "🎉【结局：物理真神】你不仅拯救了世界，还改写了魔法底层的数学常数。现在，这个世界的人施法前必须先解二阶微分方程。", choices: [{ text: "重回地球（重启）", next: 1 }] },
+        "end_hero": { text: "🛡️【结局：钢铁贤者】你击败了巫师，成为了矮人和精灵共同的导师。你唯一的烦恼是，他们总是把你的物理书当成圣经来拜。", choices: [{ text: "重回地球（重启）", next: 1 }] }
     };
 
-    function renderScene(sceneKey) {
-        const scene = story[sceneKey];
-        const textElement = document.getElementById('scene-text');
-        const choiceElement = document.getElementById('choice-buttons');
-        
-        textElement.innerHTML = scene.text;
-        choiceElement.innerHTML = '';
-
-        if (scene.choices) {
-            scene.choices.forEach(choice => {
-                const btn = document.createElement('button');
-                btn.innerText = choice.text;
-                btn.onclick = () => renderScene(choice.next);
-                choiceElement.appendChild(btn);
-            });
-        } else if (scene.next) {
-            const btn = document.createElement('button');
-            btn.innerText = "继续前进...";
-            btn.onclick = () => renderScene(scene.next);
-            choiceElement.appendChild(btn);
-        }
+    function updateStats() {
+        document.getElementById('mp').innerText = state.mp;
+        document.getElementById('item').innerText = state.item;
+        document.getElementById('step').innerText = state.step;
     }
 
-    renderScene('start');
+    function renderScene(key) {
+        const scene = story[key];
+        const textEl = document.getElementById('scene-text');
+        const btnEl = document.getElementById('choice-buttons');
+        
+        textEl.innerHTML = scene.text;
+        btnEl.innerHTML = '';
+
+        if (state.mp <= 0) {
+            textEl.innerHTML = "❌ <span class='highlight'>脑力耗尽！</span>你在计算公式时晕倒了，莫德雷统治了世界。";
+            const btn = document.createElement('button');
+            btn.innerText = "时光倒流（重来）";
+            btn.onclick = () => { state = { mp: 100, item: "物理课本", step: 1 }; renderScene(1); };
+            btnEl.appendChild(btn);
+            return;
+        }
+
+        scene.choices.forEach(c => {
+            const btn = document.createElement('button');
+            btn.innerText = c.text;
+            if (c.disabled) btn.disabled = true;
+            btn.onclick = () => {
+                if (c.effect) {
+                    if (c.effect.mp) state.mp += c.effect.mp;
+                    if (c.effect.item) state.item = c.effect.item;
+                }
+                if (typeof c.next === 'number') state.step = c.next;
+                updateStats();
+                renderScene(c.next);
+            };
+            btnEl.appendChild(btn);
+        });
+    }
+
+    updateStats();
+    renderScene(1);
 </script>
 </body>
 </html>
