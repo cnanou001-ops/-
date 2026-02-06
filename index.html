@@ -17,8 +17,6 @@
         .fail-text { color: #f85149; font-weight: bold; }
         .quiz-box { background: #0d1117; border: 1px dashed #58a6ff; padding: 15px; margin-top: 20px; border-radius: 8px; }
         .intro-box { color: #8b949e; font-style: italic; border-left: 3px solid #58a6ff; padding-left: 15px; margin-bottom: 20px; }
-        
-        /* 物品获得弹窗样式 */
         #item-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1f6feb; color: white; padding: 25px 45px; border-radius: 10px; box-shadow: 0 0 50px rgba(88, 166, 255, 0.6); z-index: 1000; text-align: center; animation: popIn 0.4s ease-out; }
         @keyframes popIn { from { transform: translate(-50%, -50%) scale(0.7); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
         #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; }
@@ -79,27 +77,84 @@
                 { text: "将薄荷糖送给艾琳。你不能确定精灵少女是否喜欢这种刺激的味道。", next: 7, effect: { mp: 20, item: "精灵的友谊", romance: 1 }, disabled: !hasCleared }
             ]
         },
-        2: { getText: () => "艾琳告诉你，莫德雷很快就会发现异界勇者的降临。你们必须赶在被莫德雷发现之前，阻止他的计划。话音未落，一只枯萎猎犬向你们袭来。你注意到上方斜坡悬挂着巨石。", getChoices: () => [{ text: "利用重力势能，撬动巨石【消耗脑力】", next: 3, effect: { mp: -5 } }, { text: "等待艾琳出手", next: "fail" }] },
-        3: { getText: () => "摆脱枯萎猎犬后，你们紧急赶往矮人矿道，试图寻找矮人族的帮助。在矮人矿道，你们遇到了守卫机甲的阻拦。", getChoices: () => [{ text: "通过导线造成电池组短路【消耗脑力】", next: 4, effect: { mp: -10, item: "磁铁矿" } }, { text: "请求艾琳用魔法摧毁守卫机甲", next: "fail" }] },
-        4: { getText: () => "矮人巴林惊叹于你精巧的技艺与知识，答应帮助你们。但前提是需要你帮他解决即将爆炸的的熔炉问题。", getChoices: () => [{ text: "设计冷凝分离室【消耗脑力】", next: 5, effect: { item: "蒸汽外骨骼", mp: 10 } }, { text: "尝试旋紧保险阀", next: "fail" }] },
-        5: { getText: () => "莫德雷终于发现了异界勇者的降临。他派出所报丧鸟前来袭击。矮人巴林愿意为你们提供炸药。", getChoices: () => [{ text: "花费一点时间计算抛物线预判投掷【消耗脑力】", next: 6, effect: { mp: -5 } }, { text: "寻找制高点直击报丧鸟头部", next: "fail" }] },
-        6: { getText: () => "击败报丧鸟后，你们向莫德雷的城堡出发。途中被莫德雷设置的魔法阵困住。", getChoices: () => [{ text: "试图制作一枚指南针【消耗脑力】", next: 10, effect: { mp: -15 } }, { text: "请求艾琳施展魔法", next: "fail" }] },
+        2: { 
+            getText: () => "艾琳告诉你，莫德雷很快就会发现异界勇者的降临。你们必须赶在被莫德雷发现之前，阻止他的计划。话音未落，一只枯萎猎犬向你们袭来。你注意到上方斜坡悬挂着巨石。", 
+            getChoices: () => [
+                { text: "利用重力势能，撬动巨石", next: 3, effect: { mp: -5 } }, 
+                { text: "利用惯性，加速冲撞猎犬", next: "fail" }
+            ] 
+        },
+        3: { 
+            getText: () => "摆脱枯萎猎犬后，你们紧急赶往矮人矿道，试图寻找矮人族的帮助。在矮人矿道，你们遇到了守卫机甲的阻拦。", 
+            getChoices: () => [
+                { text: "通过导线造成电池组短路", next: 4, effect: { mp: -10, item: "磁铁矿" } }, 
+                { text: "尝试利用机甲旋转的离心力将其甩开", next: "fail" }
+            ] 
+        },
+        4: { 
+            getText: () => "矮人巴林惊叹于你精巧的技艺与知识，答应帮助你们。但前提是需要你帮他解决即将爆炸的的熔炉问题。", 
+            getChoices: () => [
+                { text: "设计冷凝分离室", next: 5, effect: { item: "蒸汽外骨骼", mp: 10 } }, 
+                { text: "利用高压电流瞬间汽化熔炉内的多余以太", next: 5, effect: { mp: -30 } } // 支线：强行过关但扣MP多
+            ] 
+        },
+        5: { 
+            getText: () => "莫德雷终于发现了异界勇者的降临。他派出所报丧鸟前来袭击。矮人巴林愿意为你们提供炸药。", 
+            getChoices: () => [
+                { text: "花费一点时间计算抛物线预判投掷", next: 6, effect: { mp: -5 } }, 
+                { text: "利用爆炸产生的冲击波，将碎石震向敌阵", next: 6, effect: { mp: -25 } } // 支线：暴力过关
+            ] 
+        },
+        6: { 
+            getText: () => "击败报丧鸟后，你们向莫德雷的城堡出发。途中被莫德雷设置的魔法阵困住。", 
+            getChoices: () => [
+                { text: "试图制作一枚指南针【需要磁铁矿】", next: 10, effect: { mp: -15 }, disabled: !state.inventory.includes("磁铁矿") }, 
+                { text: "利用太阳高度角判断方向并强行突破", next: 10, effect: { mp: -40 } } // 支线
+            ] 
+        },
         7: { getText: () => "【剧情分支】艾琳意外地喜欢这种刺激。她精神大振，直接就要带着你前往莫德雷的城堡突袭。", getChoices: () => [{ text: "继续前进", next: 10 }] },
-        10: { getText: () => "你们终于来到莫德雷的城堡外，城堡被一条剧毒的护城河拱卫。", getChoices: () => [{ text: "利用伯努利原理制作喷气船【消耗脑力】", next: 11, effect: { mp: -5 } }, { text: "让艾琳施展冰魔法冻住河道，直接横渡", next: "fail" }] },
-        11: { getText: () => "进入城堡后，发现走廊布满雷电魔法。", getChoices: () => [{ text: "你发现这是一个高压静电网，准备构建法拉第笼进行静电屏蔽【消耗脑力】", next: 12, effect: { mp: -15 } }, { text: "让艾琳施展火魔法，摧毁魔法阵", next: "fail" }] },
+        10: { 
+            getText: () => "你们终于来到莫德雷的城堡外，城堡被一条剧毒的护城河拱卫。", 
+            getChoices: () => [
+                { text: "利用伯努利原理制作喷气船", next: 11, effect: { mp: -5 } }, 
+                { text: "尝试利用水的表面张力直接铺设浮桥", next: "fail" }
+            ] 
+        },
+        11: { 
+            getText: () => "进入城堡后，发现走廊布满雷电魔法。", 
+            getChoices: () => [
+                { text: "你发现这是一个高压静电网，准备构建法拉第笼进行静电屏蔽", next: 12, effect: { mp: -15 } }, 
+                { text: "利用绝缘橡胶（鞋底）直接冲过放电区域", next: "fail" }
+            ] 
+        },
         12: {
             getText: () => "莫德雷发现了你们的行动，他施展了极致阴冷的死灵魔法，让环境达到了绝对零度！分子几乎停止热运动。",
             getChoices: () => [
-                { text: "你灵机一动，通过使用外骨骼过载模式摩擦生热，但这会彻底摧毁外骨骼，且消耗大量脑力", next: 13, effect: { mp: -10 }, disabled: !state.inventory.includes("蒸汽外骨骼") },
-                { text: "【羁绊】你意外发现你可以与艾琳的力量形成合力共振，你们可以激发上古精灵族的自然能量", next: 13, effect: { mp: -10 }, disabled: state.romanceLevel === 0 }
+                { text: "使用外骨骼过载模式摩擦生热，但这会彻底摧毁外骨骼【需要蒸汽外骨骼】", next: 13, effect: { mp: -10 }, disabled: !state.inventory.includes("蒸汽外骨骼") },
+                { text: "【羁绊】与艾琳力量合力共振，激发自然能量【需要精灵的友谊】", next: 13, effect: { mp: -10 }, disabled: state.romanceLevel === 0 }
             ]
         },
-        13: { getText: () => "暂时击退莫德雷后，你们找到了核心魔法阵。你发现魔法阵正在共振。", getChoices: () => [{ text: "制造相消干涉区【消耗脑力】", next: 14, effect: { mp: -10 } }, { text: "请求艾琳使用魔法轰击", next: "fail" }] },
+        13: { 
+            getText: () => "暂时击退莫德雷后，你们找到了核心魔法阵。你发现魔法阵正在共振。", 
+            getChoices: () => [
+                { text: "制造相消干涉区", next: 14, effect: { mp: -10 } }, 
+                { text: "通过提升频率触发共振自毁", next: "fail" }
+            ] 
+        },
         14: {
             getText: () => {
                 let base = "莫德雷倒下了。空间正在坍塌。\n";
-                if (state.romanceLevel > 0) return base + "<span style='color:#ff79c6;'>艾琳紧紧握住你的手：“谢谢你，让我感受到了不属于这个世界的温暖。但我知道，你注定要回到属于真理的世界...”</span>";
-                return base + "艾琳感激地看着你：“勇者，世界已经安全，你打算？”";
+                // 结局打败方式描述分支
+                if (state.inventory.includes("蒸汽外骨骼")) {
+                    base += "依靠着蒸汽外骨骼提供的最后动力，你挥出了一记超越音速的重拳，将莫德雷彻底击碎。";
+                } else if (state.romanceLevel > 0) {
+                    base += "你与艾琳手心相抵，纯粹的自然能量通过共振形成了绝对的净化领域，莫德雷在白光中冰消瓦解。";
+                } else {
+                    base += "你利用身边的物理法则，制造出了短暂的坍缩奇点，吞噬了莫德雷的残魂。";
+                }
+                
+                if (state.romanceLevel > 0) return base + "\n<span style='color:#ff79c6;'>艾琳紧紧握住你的手：“谢谢你，让我感受到了不属于这个世界的温暖。但我知道，你注定要回到属于真理的世界...”</span>";
+                return base + "\n艾琳感激地看着你：“勇者，世界已经安全，你打算？”";
             },
             getChoices: () => {
                 let options = [{ text: "回归现实：释放微型核聚变回归", next: "final_choice" }];
@@ -114,7 +169,7 @@
         "end_stay": { getText: () => "【结局1：异界英雄】你选择了留下。由于未开启真理回归，你没有获得薄荷糖。你成为了传说，但无法开启下一次轮回。", choices: [{ text: "结束旅程", next: "restart_total" }] },
         "end_normal": { getText: () => "【结局2：真理觉醒】你回到了课桌前，口袋里多了【薄荷糖】。你可以开启二周目迎接更深的羁绊。", choices: [{ text: "开启二周目", next: "restart_with_candy" }] },
         "end_romance": { getText: () => "【结局3：真理与羁绊】你在艾琳的泪水中回归。旅程结束了，你已不再需要薄荷糖。时空之门缓缓关闭。", choices: [{ text: "彻底终结旅程", next: "restart_total" }] },
-        "fail": { getText: () => "艾琳的魔法失控了，你失去意识。睁开眼，发现自己正在上物理课。", quiz: true }
+        "fail": { getText: () => "你冒险的尝试失败了。你失去意识。你感到一阵剧痛，原来是同桌把你掐醒，物理老师正在叫你起来回答问题。", quiz: true }
     };
 
     function showItemModal(itemName) {
