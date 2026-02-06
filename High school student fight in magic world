@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>异界物理学家：埃索伦的觉醒</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #e2e2e2; display: flex; justify-content: center; padding: 20px; }
+        #game-container { max-width: 800px; background: #16213e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { color: #4ecca3; text-align: center; }
+        .stats { display: flex; justify-content: space-around; background: #0f3460; padding: 10px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; }
+        .content { line-height: 1.6; font-size: 1.1em; margin-bottom: 25px; }
+        .choices { display: flex; flex-direction: column; gap: 10px; }
+        button { background: #4ecca3; color: #1a1a2e; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-size: 1em; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #45b293; transform: scale(1.02); }
+        .hidden { display: none; }
+        .ending { color: #f05454; font-weight: bold; text-align: center; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <h1>异界物理学家：埃索伦的觉醒</h1>
+    <div class="stats">
+        <span>🧠 精神力: <span id="mp">100</span></span>
+        <span>💪 体力: <span id="hp">100</span></span>
+        <span>🎒 核心道具: <span id="item">《高中物理》</span></span>
+    </div>
+    <div id="scene-text" class="content">
+        </div>
+    <div id="choice-buttons" class="choices">
+        </div>
+</div>
+
+<script>
+    const story = {
+        start: {
+            text: "你醒来在异世界的森林，精灵少女艾琳正用箭指着你，怀疑你是邪恶巫师莫德雷的探子。你低头看到了怀里的《高中物理》课本。",
+            choices: [
+                { text: "【外交】展示物理课本，用反射光证明清白", next: "forest_peace" },
+                { text: "【魔法】尝试用科学逻辑强行聚拢以太", next: "forest_magic" }
+            ]
+        },
+        forest_peace: {
+            text: "你利用封面反射阳光激活了植物。艾琳感到惊讶并带你去见矮人工匠巴林。途中遭遇枯萎猎犬！",
+            choices: [
+                { text: "【力学】撬动巨石，势能打击", next: "dwarf_workshop" },
+                { text: "【躲避】吃下掩盖气息的浆果潜行", next: "dwarf_workshop" }
+            ]
+        },
+        forest_magic: {
+            text: "你强行转化能量，虽然吓跑了精灵，但身体过载。你昏倒在矮人矿道口，被巴林救起。",
+            next: "dwarf_workshop"
+        },
+        dwarf_workshop: {
+            text: "巴林的熔炉压力不稳。你利用冷凝器原理帮他改进了动力系统，获得了蒸汽外骨骼！此时莫德雷正试图献祭精灵。",
+            choices: [
+                { text: "【潜入】利用全反射原理制造光学迷彩", next: "final_battle_stealth" },
+                { text: "【强攻】制造电磁轨道炮轰击堡垒", next: "final_battle_power" }
+            ]
+        },
+        final_battle_stealth: {
+            text: "你潜入祭坛，发现莫德雷正站在生命之树下。你需要立刻破坏四个熵增放大器！",
+            choices: [
+                { text: "【共振】计算固有频率，让放大器自毁", next: "end_hero" },
+                { text: "【过载】引入混乱逻辑，烧毁魔法阵", next: "end_mystery" }
+            ]
+        },
+        final_battle_power: {
+            text: "轨道炮威力巨大，但引来了莫德雷的死灵龙。你必须做出最后的决断！",
+            choices: [
+                { text: "【极限打击】用书页做超导体，释放全力", next: "end_sacrifice" },
+                { text: "【逻辑干扰】大喊悖论，试图让死灵龙死机", next: "end_hero" }
+            ]
+        },
+        end_hero: {
+            text: "🎉【结局：异界大贤者】你成功摧毁了阴谋，世界进入了理学魔法时代。你成了埃索伦大陆最著名的教授，每天忙着给巨龙讲牛顿三定律。",
+            choices: [{ text: "重新开始", next: "start" }]
+        },
+        end_sacrifice: {
+            text: "🕯️【结局：壮烈牺牲】你击败了莫德雷，但身体无法承受这种高能输出。你化作了漫天星光，你的物理书成为了这个世界的创世圣经。",
+            choices: [{ text: "重新开始", next: "start" }]
+        },
+        end_mystery: {
+            text: "🌌【结局：回归之路】魔法阵的崩溃撕裂了时空，你被吸回了地球。你醒来在物理课上，老师正问你什么叫'功'。你看着手中的笔，指尖闪过一丝微光。",
+            choices: [{ text: "重新开始", next: "start" }]
+        }
+    };
+
+    function renderScene(sceneKey) {
+        const scene = story[sceneKey];
+        const textElement = document.getElementById('scene-text');
+        const choiceElement = document.getElementById('choice-buttons');
+        
+        textElement.innerHTML = scene.text;
+        choiceElement.innerHTML = '';
+
+        if (scene.choices) {
+            scene.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.innerText = choice.text;
+                btn.onclick = () => renderScene(choice.next);
+                choiceElement.appendChild(btn);
+            });
+        } else if (scene.next) {
+            const btn = document.createElement('button');
+            btn.innerText = "继续前进...";
+            btn.onclick = () => renderScene(scene.next);
+            choiceElement.appendChild(btn);
+        }
+    }
+
+    renderScene('start');
+</script>
+</body>
+</html>
